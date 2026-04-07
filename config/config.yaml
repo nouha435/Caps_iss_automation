@@ -1,0 +1,14 @@
+oracle:
+  host: "localhost"
+  port: 1521
+  service_name: "pcard"
+  user: "CAPSISS_DV"
+  password: "pcard001"
+
+paths:
+
+  cb2c:
+    source: "data/incoming/cb2c/BOE-FicCB2CIN.dat"
+    destination: "C:/Docker/SharedFolder/pwc-unix_capsiss/Source/usr/data/BOE-FicCB2CIN.dat"
+    script: "/pwrcard/home/usr/shl/cb2c_load_incoming.sh"
+    trace: "cb2c_load_incoming.trc000"
