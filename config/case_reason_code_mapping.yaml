@@ -1,0 +1,8 @@
+# Mapping des codes raison (case_reason_code)
+# Utilise pour la verification de la representation de transaction
+
+CASE_REASON_CODE_MAPPING:
+  "0004": "Reception Representation"
+  # Ajouter d'autres codes ici si necessaire
+  # "0001": "..."
+  # "0002": "..."

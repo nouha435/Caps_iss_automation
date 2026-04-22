@@ -1,23 +1,8 @@
-import oracledb
-import yaml
+from utils.db_connector import get_connection
 
 
-def load_config():
-    with open("config/config.yaml") as f:
-        return yaml.safe_load(f)
-
-
-def get_connection():
-    cfg = load_config()["oracle"]
-    return oracledb.connect(
-        user=cfg["user"],
-        password=cfg["password"],
-        dsn=f"{cfg['host']}:{cfg['port']}/{cfg['service_name']}"
-    )
-
-
-def clean_tables_fichiers():
-    conn = get_connection()
+def clean_tables_fichiers(strategy="full"):
+    conn   = get_connection()
     cursor = conn.cursor()
     print("\nnettoyage tables fichiers...")
 
@@ -36,20 +21,20 @@ def clean_tables_fichiers():
     print(f"  pcrd_file_processing : {cursor.rowcount} ligne(s) supprimee(s)")
     conn.commit()
 
-    tables_truncate = [
-        "base2_buffer",
-        "base2_incoming_table",
-        "IPM_BUFFER",
-        "IPM_INCOMING_TABLE_HIST",
-        "cb2c_incoming_data"
-    ]
-
-    for table in tables_truncate:
-        try:
-            cursor.execute(f"TRUNCATE TABLE {table}")
-            print(f"  {table} : truncate ok")
-        except Exception as e:
-            print(f"  {table} : ignore ({e})")
+    if strategy == "full":
+        tables_truncate = [
+            "base2_buffer",
+            "base2_incoming_table",
+            "IPM_BUFFER",
+            "IPM_INCOMING_TABLE_HIST",
+            "cb2c_incoming_data"
+        ]
+        for table in tables_truncate:
+            try:
+                cursor.execute(f"TRUNCATE TABLE {table}")
+                print(f"  {table} : truncate ok")
+            except Exception as e:
+                print(f"  {table} : ignore ({e})")
 
     cursor.close()
     conn.close()

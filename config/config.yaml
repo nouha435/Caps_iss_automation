@@ -1,14 +1,42 @@
 oracle:
-  host: "localhost"
+  host: "CAPS-database-3.5.4-RC2"
   port: 1521
   service_name: "pcard"
   user: "CAPSISS_DV"
   password: "pcard001"
 
-paths:
+cb2c:
+  destination: "/pwrcard/home/usr/data/BOE-FicCB2CIN.dat"
+  script: "/pwrcard/home/usr/shl/cb2c_load_incoming.sh"
+  trace_path: "/pwrcard/home/usr/trace/cb2c_load_incoming.TRC000"
+  trace_file: "cb2c_load_incoming.TRC000"
 
-  cb2c:
-    source: "data/incoming/cb2c/BOE-FicCB2CIN.dat"
-    destination: "C:/Docker/SharedFolder/pwc-unix_capsiss/Source/usr/data/BOE-FicCB2CIN.dat"
-    script: "/pwrcard/home/usr/shl/cb2c_load_incoming.sh"
-    trace: "cb2c_load_incoming.trc000"
+rapport:
+  allure_dir: "reports/allure"
+  allure_html: "reports/allure-html"
+
+
+case_reason_mapping: "config/case_reason_mapping.yaml"
+
+cas:
+  cas1:
+    nom: "CB2C cas BON à PAYER"
+    fichier: "/pwrcard/home/automation/data/incoming/cb2c/BOE-FicCB2CIN_1.dat"
+    table_verification: "TRANSACTION_HIST"
+    tables : ["TRANSACTION_HIST", "TRANSACTION_HIST_SUSP"]
+    champs
+    valeurrn", "TRANSACTION_HIST_SUSP"]
+    clean : [arClean,batchClean]//nom fct 
+    clean_strategy: "full"
+
+  cas2:
+    nom: "CB2C cas Représentation OK"
+    fichier: "/pwrcard/home/automation/data/incoming/cb2c/CB_RepresentationOK.dat"
+    table_verification: "TRANSACTION_HIST_SUSP"
+    clean_strategy: "tables_only"
+  cas3:
+    nom: "CB2C cas Rejet Technique"
+    fichier: "/pwrcard/home/automation/data/incoming/cb2c/Rejet_technique_cb2c.dat"
+    table_verification: "CB2C_INCOMING_FILE_REJ_ISS"
+    clean_strategy: "rejet"
+    exit_code_attendu: 99
